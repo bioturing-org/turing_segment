@@ -30,6 +30,7 @@ r = requests.get(
     }
 )
 
+print(r.text)
 assert r.status_code == 200, f"Cannot get release base on tag, tag = {GIT_TAG}"
 
 
