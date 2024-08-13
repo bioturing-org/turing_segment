@@ -1,8 +1,9 @@
 import os
 import sys
+import json
+import pathlib
 
 import requests
-import json
 
 GITHUB_TOKEN = os.environ["GITHUB_TOKEN"]
 GIT_TAG = os.environ["GIT_TAG"]
@@ -51,6 +52,9 @@ print(json.dumps(assets, indent=2))
 assert len(assets) > 0, "Assets is empty"
 
 
+assets_dir = pathlib.Path("assets")
+assets_dir.mkdir(exist_ok=True)
+
 for asset in assets:
     id = asset["id"]
     name = asset["name"]
@@ -64,5 +68,5 @@ for asset in assets:
         }
     )
 
-    with open(name, "wb+") as f:
+    with open(assets_dir / name, "wb+") as f:
         f.write(r.content)
