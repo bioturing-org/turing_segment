@@ -6,8 +6,10 @@ import requests
 GITHUB_TOKEN = os.environ["GITHUB_TOKEN"]
 GIT_TAG = os.environ["GIT_TAG"]
 
+assert len(GIT_TAG), "Git tag is empty"
+assert len(GITHUB_TOKEN), "Github token is empty"
+
 print(GIT_TAG)
-print(len(GITHUB_TOKEN))
 
 BASE_URL = "https://api.github.com"
 
