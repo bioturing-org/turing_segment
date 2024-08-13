@@ -1,0 +1,15 @@
+BioTuring Turing Segment
+Copyright 2024 BioTuring
+
+This product includes software developed at
+BioTuring (https://www.bioturing.com/)
+
+This product bundles or adapts the following open source software:
+
+|    Software   |   Version  |                 Source                    |   License File  |
+|---------------|------------|-------------------------------------------|-----------------|
+| Cellpose      | 3.0.10     | https://github.com/MouseLand/cellpose     | cellpose        |
+| Numpy         | 1.26.4     | https://github.com/numpy/numpy            | numpy           |
+| Numba         | 0.59.1     | https://github.com/numba/numba            | numba           |
+
+The license files can be found: either in the same directory, or in license directory relative to this file.
