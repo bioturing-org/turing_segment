@@ -15,7 +15,7 @@ jobs:
     if: github.event_name == 'push'
     runs-on: 'ubuntu-latest'
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.POWERFUL_TOKEN }}
       # GIT_TAG: ${{ github.ref_name }}
       GIT_TAG: v0.1.10
     steps:
