@@ -22,8 +22,8 @@ def is_release_asset(a):
 r = requests.get(
     f"{BASE_URL}/repos/bioturing-org/modelling/release/tags/{GIT_TAG}",
     headers = {
-        "Authorization": f"Bearer {GITHUB_TOKEN}"
-        "X-GitHub-Api-Version": "2022-11-28"
+        "Authorization": f"Bearer {GITHUB_TOKEN}",
+        "X-GitHub-Api-Version": "2022-11-28",
     }
 )
 
