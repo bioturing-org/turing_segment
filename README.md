@@ -12,7 +12,7 @@
 ## Installation
 
 ```bash
-pip install <FILL_IT_LATER>
+pip install <wheel_path>
 ```
 
 ## Usage
