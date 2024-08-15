@@ -10,10 +10,12 @@
 - The package is designed to be easy to use. It provides a simple CLI for quick integration into your image analysis workflows.
 
 ## Installation
-
+Use pip:
 ```bash
 pip install --index-url https://pypi.bioturing.com/simple turing_segment
 ```
+
+Or you can download the wheels direcly from the realse page of this repository.
 
 ## Usage
 
