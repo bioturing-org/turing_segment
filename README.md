@@ -12,7 +12,7 @@
 ## Installation
 
 ```bash
-pip install <wheel_path>
+pip install --index-url https://pypi.bioturing.com/simple turing_segment
 ```
 
 ## Usage
