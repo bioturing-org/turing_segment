@@ -15,7 +15,7 @@ Use pip:
 pip install --index-url https://pypi.bioturing.com/simple turing_segment
 ```
 
-Or you can download the wheels direcly from the realse page of this repository.
+Or you can download the wheels direcly from the release page of this repository.
 
 ## Usage
 
