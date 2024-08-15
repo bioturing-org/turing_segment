@@ -16,6 +16,9 @@ jobs:
     env:
       GITHUB_DOWNLOAD_TOKEN: ${{ secrets.TURING_SEGMENT_DOWNLOAD_MODELING_RELEASE }}
       GIT_TAG: ${{ github.ref_name }}
+      TWINE_REPOSITORY_URL: 'https://pypi.bioturing.com'
+      TWINE_USERNAME: ${{ secrets.BIOTURING_PRIVATE_PYPI_USERNAME }}
+      TWINE_PASSWORD: ${{ secrets.BIOTURING_PRIVATE_PYPI_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
 
@@ -34,6 +37,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r scripts/requirements.txt
+          pip install twine
 
       - name: Download release from private repository
         run: python scripts/release.py
@@ -48,3 +52,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: assets/*
+
+      - name: Upload to private pypi repository
+        run: python -m twine upload assets/*
