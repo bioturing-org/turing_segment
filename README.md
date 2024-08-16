@@ -9,6 +9,13 @@
 - Turing Segment is highly parallelized, leveraging both CPU and GPU resources to achieve accelerated processing speeds.
 - The package is designed to be easy to use. It provides a simple CLI for quick integration into your image analysis workflows.
 
+## Requirements
+- NVIDIA GPU (recommend 40xx series, but it should work on lower series as well)
+- CUDA Runtime 11.7 or later
+- Python 3.8 or later
+- PyTorch 2.0 or later
+- geopandas 1.0 or later
+
 ## Installation
 Use pip:
 ```bash
