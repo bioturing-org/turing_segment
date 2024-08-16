@@ -17,12 +17,25 @@
 - geopandas 1.0 or later
 
 ## Installation
-Use pip:
+
+We recommend using conda to install Turing Segment. Run the following command to create a new conda environment:
+
+```bash
+conda create -n turing_segment python=3.10
+conda activate turing_segment
+```
+
+Make sure your PyTorch version is compatible with the CUDA Runtime version and select the correct PyTorch version from the [PyTorch website](https://pytorch.org/get-started/locally/). For example, if you have CUDA 12.1, use the following command to install PyTorch:
+
+```bash
+conda install pytorch pytorch-cuda=12.1 -c pytorch -c nvidia
+```
+
+Install Turing Segment using `pip`:
+
 ```bash
 pip install --index-url https://pypi.bioturing.com/simple turing_segment
 ```
-
-Or you can download the wheels direcly from the release page of this repository.
 
 ## Usage
 
