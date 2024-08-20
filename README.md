@@ -63,6 +63,30 @@ By default, the model checkpoints are downloaded if they are not present in the 
 turing_segment <image_path> --model-type manual --model-path <path_to_model_checkpoint> --size-model-path <path_to_size_model_checkpoint>
 ```
 
+The tool also supports modifying some parameters of the segmentation process and post-processing. This can be done by using `--config-file` to specify a YAML configuration file containing the parameters:
+
+```bash
+turing_segment <image_path> --config-file <path_to_config_file>
+```
+
+A sample config file can be found from `configs/config.yaml`, the parameters from the file are also the default parameters for the segmentation process and post-processing:
+
+```yaml
+pipeline:
+  infer_size: 1024              # Tile size (in pixels) to feed the model. The size is of the scaled tiles, not the original tiles from dividing the input image.
+  overlap_margin: 32            # Margin (in pixels) to overlap between tiles during inference to reduce edge artifacts. Also of the scaled tiles.
+  n_postprocess_processes: 32   # Number of parallel processes used for post-processing
+  postprocess_queue_size: 128   # Size of the queue to store model output before post-processing
+  n_merge_tile_processes: 16    # Number of parallel processes used to merge tiles into the final output
+
+postprocess:
+  niter: 200                    # Number of iterations for following the flow
+  cellprob_threshold: 0         # Threshold for the probability of a pixel being part of a cell (in logit; 0 corresponds to 0.5 probability)
+  flow_threshold: 0.4           # Threshold for the flow magnitude to filter out low-confidence regions
+  min_size: 15                  # Minimum size (in pixels) for objects to be considered as cells
+  resample: false               # Whether to resample the output to match the original image size when postprocessing (false to keep the inferred size). When scale > 1, set to true will improve postprocessing performance
+```
+
 To see the full list of available options, use the `--help` flag.
 
 ```bash
