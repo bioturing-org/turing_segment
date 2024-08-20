@@ -1,0 +1,13 @@
+pipeline:
+  infer_size: 1024              # Tile size (in pixels) to feed the model. The size is of the scaled tiles, not the original tiles from dividing the input image.
+  overlap_margin: 32            # Margin (in pixels) to overlap between tiles during inference to reduce edge artifacts. Also of the scaled tiles.
+  n_postprocess_processes: 32   # Number of parallel processes used for post-processing
+  postprocess_queue_size: 128   # Size of the queue to store model output before post-processing
+  n_merge_tile_processes: 16    # Number of parallel processes used to merge tiles into the final output
+
+postprocess:
+  niter: 200                    # Number of iterations for following the flow
+  cellprob_threshold: 0         # Threshold for the probability of a pixel being part of a cell (in logit; 0 corresponds to 0.5 probability)
+  flow_threshold: 0.4           # Threshold for the flow magnitude to filter out low-confidence regions
+  min_size: 15                  # Minimum size (in pixels) for objects to be considered as cells
+  resample: false               # Whether to resample the output to match the original image size when postprocessing (false to keep the inferred size). When scale > 1, set to true will improve postprocessing performance
