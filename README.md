@@ -45,6 +45,13 @@ Basic usage is as follows:
 turing_segment <image_path>
 ```
 
+The output file can be specified using the `--output-file` flag. If the flag is not specified, the output file is saved to `{image_name}_{page}_{channels}.parquet`. By default, the output file is a geoparquet file, which can be opened with `geopandas` (make sure the installed version is 1.0 or later):
+
+```python
+import geopandas as gpd
+gpd.read_parquet(<output_file>)
+```
+
 You can specify the image type explicitly using the `--image-type` flag. If the flag is not specified, the image type is inferred from the input file. Currently, `tiff`, `zarr` and `cv2` are supported image types.
 
 ```bash
@@ -92,6 +99,31 @@ To see the full list of available options, use the `--help` flag.
 ```bash
 turing_segment --help
 ```
+
+## Benchmark
+
+1. Processing Time:
+   - Turing Segment significantly outperforms the original Cellpose, especially for larger images.
+   - For a 40,000 x 40,000 pixel image, Turing Segment is 294 times faster, reducing processing time from hours to less than 1 minute.
+
+   ![Processing Time](/assets/performance.png)
+   ![Processing Time Ratio](/assets/performance_ratio.png)
+
+2. Memory Consumption:
+   - Turing Segment uses considerably less memory than the original Cellpose.
+   - For a 40,000 x 40,000 pixel image, Turing Segment consumes 23 times less memory.
+
+   ![Memory Consumption](/assets/memory_usage.png)
+   ![Memory Consumption Ratio](/assets/memory_ratio.png)
+
+3. Accuracy:
+   - Turing Segment maintains comparable accuracy to the original Cellpose algorithm.
+
+   ![Accuracy](/assets/accuracy.png)
+
+These improvements allow Turing Segment to process larger images more efficiently while maintaining accuracy.
+
+For detailed benchmark information and analysis, please refer to the [TECHNICAL.md](/TECHNICAL.md) file.
 
 ## Feedback
 
