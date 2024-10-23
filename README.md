@@ -39,41 +39,96 @@ pip install --index-url https://pypi.bioturing.com/simple turing_segment
 
 ## Usage
 
-Basic usage is as follows:
+We provide three types of commands: 
+- `infer`: segment the image
+- `poly2mask`: convert polygons to zarr labeled mask
+- `stitch`: Stitch 2D cell segmentation results into 3D cells
+
+To see the full list of available options, use the `--help` flag.
 
 ```bash
-turing_segment <image_path>
+turing_segment --help
+```
+---
+### Inference
+
+**1. Single image segmentation**
+```bash
+tuirng_segment infer --image-path /path/to/image --output-dir /path/to/output_dir
+```    
+
+Output format:
+
+```
+/path/to/output_dir/
+├── metadata.json
+└── polygons.parquet
 ```
 
-The output file can be specified using the `--output-file` flag. If the flag is not specified, the output file is saved to `{image_name}_{page}_{channels}.parquet`. By default, the output file is a geoparquet file, which can be opened with `geopandas` (make sure the installed version is 1.0 or later):
+- `metadata.json` contains the information of the image, including the `image-shape`, `scale`, `model-type`, ... of the image. 
+- `polygons.parquet` contains the polygons of the segmented cells in Shapely geometry format.
 
-```python
-import geopandas as gpd
-gpd.read_parquet(<output_file>)
+If the `--output-dir` is not provided, the output dir will be created with the name `{image_name}_{page}_{channels}_{model_type}`.
+
+---
+**2. Segmentation for multiple images**
+
+To segment multiple images, replace the `--image-path` with `--image-dir` to specify the folder containing multiple images.
+
+```bash
+tuirng_segment infer --image-dir /path/to/image_dir --output-dir /path/to/output_dir
 ```
+If the `--output-dir` is not provided, the output dir will be created with the name `{image_dir}_results`.
+
+Output format:
+```
+/path/to/output_dir/
+├── configs.yml
+├── image_name1/
+│   ├── metadata.json
+│   └── polygons.parquet
+├── image_name2/
+│   ├── metadata.json
+│   └── polygons.parquet
+└── ...
+```
+
+`configs.yml` will be automatically generated to store the postprocess config for each image. We only support for storing the config for 3D stitching. If you want to run 3D stitching, you must modify `z_index` for each image name in the config file.
+
+Example of `configs.yml`:
+```yaml
+stitch:
+- image_name: image_name1
+  z_index: null
+- image_name: image_name2
+  z_index: null
+```
+
+---
+**3. Specify the `channels`**
+
+To specify channels to segment, use the `--channels` flag. The channels are specified as a comma-separated list of channel indices where the first channel is for membrane and the second channel is for nucleus. If the nucleus channel is not specified, a zero channel is used.
+```bash
+tuirng_segment infer --image-path /path/to/image --channels 0,1
+```
+If the image has the channel in the last dimension, use the `--channel-last` flag.  
+
+---
+**4. Specify the `image-type`**
 
 You can specify the image type explicitly using the `--image-type` flag. If the flag is not specified, the image type is inferred from the input file. Currently, `tiff`, `zarr` and `cv2` are supported image types.
 
 ```bash
-turing_segment <image_path> --image-type tiff
+turing_segment infer --image-path /path/to/image --image-type tiff
 ```
 
-To specify channels to segment, use the `--channels` flag. The channels are specified as a comma-separated list of channel indices where the first channel is for membrane and the second channel is for nucleus. If the nucleus channel is not specified, a zero channel is used.
-
-```bash
-turing_segment <image_path> --channels 0,1
-```
-
-By default, the model checkpoints are downloaded if they are not present in the cache directory. If you want to use a custom checkpoint from cellpose training pipeline, you can set the model type as `--model-type manual` and specify the paths to the model and size model checkpoints using the `--model-path` and `--size-model-path` flags, respectively. You may skip specifying `--size-model-path` if a provided scale is specified by ``--scale``.
-
-```bash
-turing_segment <image_path> --model-type manual --model-path <path_to_model_checkpoint> --size-model-path <path_to_size_model_checkpoint>
-```
+---
+**5. Specify the `config-file`**
 
 The tool also supports modifying some parameters of the segmentation process and post-processing. This can be done by using `--config-file` to specify a YAML configuration file containing the parameters:
 
 ```bash
-turing_segment <image_path> --config-file <path_to_config_file>
+turing_segment infer --image-path /path/to/image --config-file /path/to/config.yaml
 ```
 
 A sample config file can be found from `configs/config.yaml`, the parameters from the file are also the default parameters for the segmentation process and post-processing:
@@ -94,36 +149,45 @@ postprocess:
   resample: false               # Whether to resample the output to match the original image size when postprocessing (false to keep the inferred size). When scale > 1, set to true will improve postprocessing performance
 ```
 
-To see the full list of available options, use the `--help` flag.
+---
+**6. Checkpoint download**
+
+By default, the model checkpoints are downloaded if they are not present in the cache directory. If you want to use a custom checkpoint from cellpose training pipeline, you can set the model type as `--model-type manual` and specify the paths to the model and size model checkpoints using the `--model-path` and `--size-model-path` flags, respectively. You may skip specifying `--size-model-path` if a provided scale is specified by ``--scale``.
 
 ```bash
-turing_segment --help
+turing_segment infer \ 
+--image-path /path/to/image \
+--model-type manual \
+--model-path /path/to/model_checkpoint \
+--size-model-path /path/to/size_model_checkpoint
 ```
 
-## Benchmark
+---
+### Poly2mask
 
-1. Processing Time:
-   - Turing Segment significantly outperforms the original Cellpose, especially for larger images.
-   - For a 40,000 x 40,000 pixel image, Turing Segment is 294 times faster, reducing processing time from hours to less than 1 minute.
+We provide a command to convert the polygons to zarr labeled mask. The default behavior should be getting shape from `metadata.json` in the same folder with the polygons file. If the `metadata.json` is not found, we will default the mask shape as max of the polygons coordinates. If your polygons not generated from our segmentation, please make sure the input `polygon_dir` contains the `polygons.parquet`
 
-   ![Processing Time](/assets/performance.png)
-   ![Processing Time Ratio](/assets/performance_ratio.png)
+```bash
+turing_segment poly2mask /path/to/polygons --output-dir /path/to/output_dir
+```
 
-2. Memory Consumption:
-   - Turing Segment uses considerably less memory than the original Cellpose.
-   - For a 40,000 x 40,000 pixel image, Turing Segment consumes 23 times less memory.
+If the `--output-dir` is not provided, the output will be created in the same folder with the polygons file with the name `mask.zarr`.
 
-   ![Memory Consumption](/assets/memory_usage.png)
-   ![Memory Consumption Ratio](/assets/memory_ratio.png)
+---
+### 3D Stitch
 
-3. Accuracy:
-   - Turing Segment maintains comparable accuracy to the original Cellpose algorithm.
+We provide a command to stitch 2D segmentation results to 3D segmentation results. With each polygon in the $i'th$ image will be matched with the polygon in the $(i+1)'th$ image with the highest IOU (intersection over union). If the highest iou is less than the threshold, the polygon will be considered as a new object. If `--iou-threshold` is not provided, we will default the iou threshold as 0.5.
 
-   ![Accuracy](/assets/accuracy.png)
+```bash
+turing_segment stitch /path/to/segmentation_results --output-dir /path/to/output_dir --iou-threshold 0.5 --num-process 8
+```
+The `/path/to/segmentation_results` is the folder contains all the folder of the segmentations. Each folder must contain the `polygons.parquet` and `metadata.json` files. The `metadata.json` file must contain the `z_index` field to indicate the z-index of the image.
+ 
+If `--output-dir` is not provided, the output will be saved in the same folder of the segmentation results with the name `3d_polygons.parquet`.
 
-These improvements allow Turing Segment to process larger images more efficiently while maintaining accuracy.
+Default the stitching algorithm will run in 8 processes. For disable multi-process (only run in main process), set `--num-process` to 0.
 
-For detailed benchmark information and analysis, please refer to the [TECHNICAL.md](/TECHNICAL.md) file.
+**For example of each command, please refer to the [EXAMPLE.md](./example/EXAMPLE.md) file.**
 
 ## Feedback
 
