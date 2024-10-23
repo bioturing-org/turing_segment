@@ -195,20 +195,20 @@ Default the stitching algorithm will run in 8 processes. For disable multi-proce
    - Turing Segment significantly outperforms the original Cellpose, especially for larger images.
    - For a 40,000 x 40,000 pixel image, Turing Segment is 294 times faster, reducing processing time from hours to less than 1 minute.
 
-   ![Processing Time](assets/performance.png)
-   ![Processing Time Ratio](assets/performance_ratio.png)
+   ![Processing Time](static/performance.png)
+   ![Processing Time Ratio](static/performance_ratio.png)
 
 2. Memory Consumption:
    - Turing Segment uses considerably less memory than the original Cellpose.
    - For a 40,000 x 40,000 pixel image, Turing Segment consumes 23 times less memory.
 
-   ![Memory Consumption](assets/memory_usage.png)
-   ![Memory Consumption Ratio](assets/memory_ratio.png)
+   ![Memory Consumption](static/memory_usage.png)
+   ![Memory Consumption Ratio](static/memory_ratio.png)
 
 3. Accuracy:
    - Turing Segment maintains comparable accuracy to the original Cellpose algorithm.
 
-   ![Accuracy](assets/accuracy.png)
+   ![Accuracy](static/accuracy.png)
 
 These improvements allow Turing Segment to process larger images more efficiently while maintaining accuracy.
 

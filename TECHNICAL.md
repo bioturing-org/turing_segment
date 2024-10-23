@@ -50,18 +50,18 @@ To test the effectiveness of the mentioned improvements, we compare the Turing S
 
 This benchmark compares the processing time and memory between Turing Segment and the original Cellpose using 16 processes. The plots below show the processing time for the original Cellpose and Turing Segment. All images are squared (dxd) with dimension d is represented in the horizontal axis). 
 
-![Processing Time](/assets/performance.png)
-![Processing Time Ratio](/assets/performance_ratio.png)
+![Processing Time](static/performance.png)
+![Processing Time Ratio](static/performance_ratio.png)
 
 Turing Segment outperforms the original Cellpose with different image sizes. The difference is more significant as the image size increases. For the image with size 40,000 x 40,000 Turing Segment is 294 times faster than the original Cellpose, reducing the processing time from a few hours to less than 1 minute.
 
 The plots below shows the memory consumption between the two tools:
 
-![Memory Consumption](/assets/memory_usage.png)
-![Memory Consumption Ratio](/assets/memory_ratio.png)
+![Memory Consumption](static/memory_usage.png)
+![Memory Consumption Ratio](static/memory_ratio.png)
 
 Thanks to our tiled processing, Turing Segment’s memory consumption is reduced rapidly. For the image with size 40000x40000, our tool consumes 23 times less memory than the original Cellpose. This improvement reduces the hardware requirements and allows us to process even larger images (discussed in the next session).
 
 While achieving impressive speedup, Turing Segment does not sacrifice accuracy. The plot below shows the accuracy of the Turing Segment  and the original Cellpose.
 
-![Accuracy](/assets/accuracy.png)
+![Accuracy](static/accuracy.png)
