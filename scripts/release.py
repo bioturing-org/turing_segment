@@ -28,7 +28,9 @@ r = requests.get(
     },
 )
 
-assert r.status_code == 200, f"Cannot get release base on tag, tag = {GIT_TAG}"
+assert (
+    r.status_code == 200
+), f"Cannot get release base on tag, tag = {GIT_TAG}, status_code = {r.status_code}, message = {r.text}"
 
 
 assets = [
