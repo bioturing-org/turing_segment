@@ -34,7 +34,7 @@ conda install pytorch pytorch-cuda=12.1 -c pytorch -c nvidia
 Install Turing Segment using `pip`:
 
 ```bash
-pip install --index-url https://pypi.bioturing.com/simple turing_segment
+pip install --upgrade turing_segment
 ```
 
 ## Usage
