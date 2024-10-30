@@ -33,6 +33,8 @@ The deduplication algorithm also benefits from parallel processing, as segmentat
 
 ## Benchmark
 
+### Inference
+
 All benchmarks are generated with the following specifications:
 - GPU: NVIDIA RTX 4090
 - CPU: AMD Ryzen Threadripper PRO 7985WX 64-Cores
@@ -43,7 +45,7 @@ To test the effectiveness of the mentioned improvements, we compare the Turing S
 | Feature           |     Turing Segment     | Original Cellpose |
 |:------------------:|:----------------------:|:-----------------:|
 | GPU Acceleration  |           ✅            |         ✅         |
-| Tiled Processing  |           ✅            |         ❌         |
+| Tiled Processing  |           ✅            |         partial         |
 | Post-processing   | Bioturing's DP Algorithm| Original Algorithm|
 | Parallelization   |           ✅            |         ❌         |
 
@@ -65,3 +67,25 @@ Thanks to our tiled processing, Turing Segment’s memory consumption is reduced
 While achieving impressive speedup, Turing Segment does not sacrifice accuracy. The plot below shows the accuracy of the Turing Segment  and the original Cellpose.
 
 ![Accuracy](static/accuracy.png)
+
+### Stitching segmentations into 3D cells
+
+Our algorithm for stitching segmentations into 3D cells leverages the STRTree data structure to minimize the number of segmentation pairs to compute IOUs (the main computational cost of the stitching process). It's further accelerated by paralleling the IOUs computation in multiple processes.
+
+In this benchmark, we compare the performance and memory consumption between algorithms from Turing Segment and the original Cellpose to stitch segmentations. The plots below show the processing time and memory consumption of Turing Segment (16 processes) and the original Cellpose algorithms. Due to the memory constraints, the original Cellpose can only process images up to 40000x40000 in size.
+
+
+![Processing Time](static/stitching_time.png)
+
+
+
+![Memory Consumption](static/stitching_memory.png)
+
+Our algorithm consumes much less memory than the original Cellpose. For the image with size 40000x40000, Turing Segment consumes nearly 300x less memory than the original Cellpose. The algorithm is also 400x faster than the original Cellpose. 
+
+To understand the efficiency of our parallelization, we plot the processing time as the number of processes increases. The processing time scales well with the number of processes, demonstrating near-linear speedup up to 16 processes.
+
+![Processing Time](static/stitching_time_n_procs.png)
+
+
+
