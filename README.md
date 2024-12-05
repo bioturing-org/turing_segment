@@ -34,7 +34,7 @@ conda install pytorch pytorch-cuda=12.1 -c pytorch -c nvidia
 Install Turing Segment using `pip`:
 
 ```bash
-pip install --upgrade turing_segment
+pip install --index-url https://pypi.bioturing.com/simple turing_segment
 ```
 
 ## Usage
@@ -56,6 +56,11 @@ turing_segment --help
 ```bash
 tuirng_segment infer --image-path /path/to/image --output-dir /path/to/output_dir
 ```    
+By default, the model used is `cyto3`, if you want to use HE model, you must provide the `--model-type he` argument.
+
+```bash
+tuirng_segment infer --image-path /path/to/image --model-type he --output-dir /path/to/output_dir
+```   
 
 Output format:
 
@@ -107,10 +112,18 @@ stitch:
 ---
 **3. Specify the `channels`**
 
-To specify channels to segment, use the `--channels` flag. The channels are specified as a comma-separated list of channel indices where the first channel is for membrane and the second channel is for nucleus. If the nucleus channel is not specified, a zero channel is used.
-```bash
-tuirng_segment infer --image-path /path/to/image --channels 0,1
-```
+<!-- To specify channels to segment, use the `--channels` flag. The channels are specified as a comma-separated list of channel indices where the first channel is for membrane and the second channel is for nucleus. If the nucleus channel is not specified, a zero channel is used. -->
+To specify channels to segment, use the `--channels` flag. The channels are specified as a comma-separated list of channel indices. You must past the channel indices in the order of the model input. 
+    
+  - Fluorescence image: The first channel is for membrane and the second channel is for nucleus. If the nucleus channel is not specified, a zero channel is used.
+    ```bash
+    tuirng_segment infer --image-path /path/to/image --model-type cyto3 --channels 0,1
+    ```
+    
+  - Hematoxylin and eosin (H&E) image: The first channel is for red, the second channel is for green, and the third channel is for blue (RGB).
+    ```bash
+    tuirng_segment infer --image-path /path/to/image --model-type he --channels 0,1,2
+    ```
 If the image has the channel in the last dimension, use the `--channel-last` flag.  
 
 ---
@@ -150,14 +163,14 @@ postprocess:
 ```
 
 ---
-**6. Checkpoint download**
+**6. Checkpoint download** 
 
-By default, the model checkpoints are downloaded if they are not present in the cache directory. If you want to use a custom checkpoint from cellpose training pipeline, you can set the model type as `--model-type manual` and specify the paths to the model and size model checkpoints using the `--model-path` and `--size-model-path` flags, respectively. You may skip specifying `--size-model-path` if a provided scale is specified by ``--scale``.
+By default, the model checkpoints are downloaded if they are not present in the cache directory. If you want to use a custom checkpoint from cellpose training pipeline, you can specify the paths to the model and size model checkpoints using the `--model-path` and `--size-model-path` flags, respectively. You may skip specifying `--size-model-path` if a provided scale is specified by ``--scale``.
 
 ```bash
 turing_segment infer \ 
 --image-path /path/to/image \
---model-type manual \
+--model-type <cyto_or_he> \
 --model-path /path/to/model_checkpoint \
 --size-model-path /path/to/size_model_checkpoint
 ```
