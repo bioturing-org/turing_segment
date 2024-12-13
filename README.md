@@ -2,6 +2,8 @@
 
 ***Turing Segment*** is a high-performance package for cell segmentation based on the popular [Cellpose](https://github.com/MouseLand/cellpose) algorithm. It is designed to provide lightning-fast performance while maintaining the accuracy and robustness of the original Cellpose model.
 
+Explore our [blog post](https://bioturing.com/blog/turing-segment-a-high-performance-cellpose-algorithm-for-cell-segmentation/) for in-depth details.
+
 ## Features
 - Built on top of the Cellpose framework, leveraging its proven segmentation capabilities.
 - Our new post-processing algorithm is significantly faster than the original Cellpose algorithm, reducing computational overhead and enabling faster processing times.
@@ -224,8 +226,6 @@ Default the stitching algorithm will run in 8 processes. For disable multi-proce
    ![Accuracy](static/accuracy.png)
 
 These improvements allow Turing Segment to process larger images more efficiently while maintaining accuracy.
-
-For detailed benchmark information and analysis, please refer to the [TECHNICAL.md](TECHNICAL.md) file.
 
 ## Feedback
 
