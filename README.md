@@ -58,10 +58,10 @@ turing_segment --help
 ```bash
 tuirng_segment infer --image-path /path/to/image --output-dir /path/to/output_dir
 ```    
-By default, the model used is `cyto3`, if you want to use HE model, you must provide the `--model-type he` argument.
+By default, the model used is `cyto3`, if you want to use HE model, you must provide the `--model-type he2` argument or `--model-type he` for old HE version.
 
 ```bash
-tuirng_segment infer --image-path /path/to/image --model-type he --output-dir /path/to/output_dir
+tuirng_segment infer --image-path /path/to/image --model-type he2 --output-dir /path/to/output_dir
 ```   
 
 Output format:
@@ -124,7 +124,7 @@ To specify channels to segment, use the `--channels` flag. The channels are spec
     
   - Hematoxylin and eosin (H&E) image: The first channel is for red, the second channel is for green, and the third channel is for blue (RGB).
     ```bash
-    tuirng_segment infer --image-path /path/to/image --model-type he --channels 0,1,2
+    tuirng_segment infer --image-path /path/to/image --model-type he2 --channels 0,1,2
     ```
 If the image has the channel in the last dimension, use the `--channel-last` flag.  
 
